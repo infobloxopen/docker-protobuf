@@ -27,4 +27,5 @@ docker build \
 --build-arg SWIFT_VERSION="${SWIFT_VERSION:-"5.1.5"}" \
 --build-arg TS_PROTOC_GEN_VERSION="${TS_PROTOC_GEN_VERSION:-"0.14.0"}" \
 --build-arg UPX_VERSION="${UPX_VERSION:-"3.96"}" \
+--build-arg PROTOC_GEN_GORM="${PROTOC_GEN_GORM:-"0.20.1"}" \
 ${@} .

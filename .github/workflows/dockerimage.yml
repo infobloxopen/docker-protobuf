@@ -1,17 +1,17 @@
 name: Docker Image
-on: 
+on:
   push:
     tags:
       - '**'
     branches:
       - master
   pull_request:
-    paths: 
+    paths:
       - .github/workflows/dockerimage.yml
       - build.sh
       - Dockerfile
       - protoc-wrapper
-          
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,7 +25,7 @@ jobs:
         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
         function tag_and_push {
-          docker tag build "thethingsindustries/protoc:${1}" && docker push "thethingsindustries/protoc:${1}"
+          docker tag build "infoblox/protoc:${1}" && docker push "infoblox/protoc:${1}"
         }
 
         if [[ "${GITHUB_REF}" == "refs/heads/master" ]]; then
@@ -33,13 +33,13 @@ jobs:
         elif [[ "${GITHUB_REF}" =~ refs/tags/v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
             TAG="${GITHUB_REF#"refs/tags/v"}"
             tag_and_push "${TAG}"
-            if [[ "${TAG}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then 
+            if [[ "${TAG}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
                 tag_and_push "${TAG%.*}"
-                tag_and_push "${TAG%.*.*}"; 
+                tag_and_push "${TAG%.*.*}";
                 tag_and_push "latest"
-            elif [[ "${TAG}" =~ ^[0-9]+\.[0-9]+\.[0-9]+-ttn$ ]]; then 
+            elif [[ "${TAG}" =~ ^[0-9]+\.[0-9]+\.[0-9]+-ttn$ ]]; then
                 tag_and_push "${TAG%.*}-ttn"
-                tag_and_push "${TAG%.*.*}-ttn"; 
+                tag_and_push "${TAG%.*.*}-ttn";
                 tag_and_push "latest-ttn"
             fi
         else

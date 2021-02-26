@@ -25,7 +25,7 @@ RUN git clone --recursive --depth=1 -b v${GRPC_VERSION} https://github.com/grpc/
         ../.. && \
     cmake --build . --target plugins && \
     cmake --build . --target install && \
-    DESTDIR=/out cmake --build . --target install 
+    DESTDIR=/out cmake --build . --target install
 
 ARG PROTOBUF_C_VERSION
 RUN mkdir -p /protobuf-c && \
@@ -160,6 +160,13 @@ RUN mkdir -p ${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway && \
     mkdir -p /out/usr/include/google/rpc && \
     install -D $(find ./third_party/googleapis/google/rpc -name '*.proto') -t /out/usr/include/google/rpc
 
+ARG PROTOC_GEN_GORM
+RUN mkdir -p ${GOPATH}/src/github.com/infobloxopen/protoc-gen-gorm && \
+    curl -sSL https://api.github.com/repos/infobloxopen/protoc-gen-gorm/tarball/v${PROTOC_GEN_GORM} | tar xz --strip 1 -C ${GOPATH}/src/github.com/infobloxopen/protoc-gen-gorm && \
+    cd ${GOPATH}/src/github.com/infobloxopen/protoc-gen-gorm && \
+    go build -ldflags '-w -s' -o /out/usr/bin/protoc-gen-gorm . && \
+    mkdir -p /out/usr/include/options && \
+    install -D $(find ./options -name '*.proto') -t /out/usr/include/options
 
 FROM rust:${RUST_VERSION}-slim as rust_builder
 RUN apt-get update && apt-get install -y musl-tools curl
@@ -254,4 +261,9 @@ RUN apk add --no-cache bash libstdc++ && \
     ln -s /usr/local/lib/node_modules/ts-protoc-gen/bin/protoc-gen-ts /usr/bin/protoc-gen-ts
 COPY protoc-wrapper /usr/bin/protoc-wrapper
 ENV LD_LIBRARY_PATH='/usr/lib:/usr/lib64:/usr/lib/local'
+
+
+# Infoblox gorm
+
+
 ENTRYPOINT ["protoc-wrapper", "-I/usr/include"]

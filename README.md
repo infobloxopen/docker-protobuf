@@ -26,6 +26,7 @@ It started out as https://github.com/znly/docker-protobuf fork, but grew into a 
 - [stepancheg/rust-protobuf](https://github.com/stepancheg/rust-protobuf)
 - [TheThingsIndustries/protoc-gen-fieldmask](https://github.com/TheThingsIndustries/protoc-gen-fieldmask)
 - [TheThingsIndustries/protoc-gen-gogottn](https://github.com/TheThingsIndustries/protoc-gen-gogottn)
+- [infobloxopen/protoc-gen-gorm](https://github.com/infobloxopen/protoc-gen-gorm)
 
 ## Supported languages
 - C
